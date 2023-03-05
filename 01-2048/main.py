@@ -51,14 +51,36 @@ class Board:
         return True
     
     def swipe(self, direction):
-        match command:
+        match direction:
+            case "W":
+                for row in range(1, SIZE):
+                    for col in range(SIZE):
+                        self.board[row - 1][col], self.board[row][col] = self.board[row - 1][col] + self.board[row][col]
+            case "A":
+                for row in range(SIZE):
+                    for col in range(1, SIZE):
+                        self.board[row][col - 1], self.board[row][col] = self.board[row][col - 1] + self.board[row][col]
+            case "S":
+                for row in range(SIZE - 1, -1, -1):
+                    for col in range( SIZE):
+                        self.board[row][col], self.board[row - 1][col] = self.board[row][col] + self.board[row - 1][col]
             case "D":
                 for row in range(SIZE):
-                    for col in range(SIZE):
-                        if col > 0: 
-                            self.board[row][col - 1], self.board[row][col] = self.board[row][col - 1] + self.board[row][col]
+                    for col in range(SIZE - 1, -1, -1):
+                        self.board[row][col], self.board[row][col - 1] = self.board[row][col] + self.board[row][col - 1]
+        match direction:
             case "W":
-                pass
+                for row in range(1, SIZE):
+                    for col in range(SIZE):
+                        if not self.board[row - 1][col]:
+                            self.board[row - 1][col] = self.board[row][col]
+            case "A":
+                for row in range(SIZE):
+                    for col in range(1, SIZE):
+                        if not self.board[row][col - 1]:
+                            self.board[row][col - 1] = self.board[row][col]
+            
+        
 
 class Tile:
     def __init__(self, number, row, col):
@@ -73,7 +95,7 @@ class Tile:
             self.color = SUPER_COLOR
             
     def __bool__(self):
-        return not self.number
+        return bool(self.number)
     
     def __add__(self, other):
         if self.number != other.number:
